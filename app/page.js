@@ -81,33 +81,34 @@ export default function Home() {
   };
 
   const handleVote = async (vote) => {
-    if (!user) return; // Ensure user is authenticated
+    if (!user) return;
 
-    // Log user.primaryEmailAddress to inspect the structure
-    console.log("Primary Email Address:", user.primaryEmailAddress);
-
-    setLoading(true); // Show loading while the vote is being processed
-
+    setLoading(true);
     try {
-      // Extract the actual email string from user.primaryEmailAddress
       const email = user.primaryEmailAddress?.emailAddress || "No email found";
 
-      // Store the vote in Firestore with the user's ID as the document ID
-      await setDoc(
-        doc(db, "votes", user.id),
-        {
-          vote: vote,
+      // Call the new API route to submit the vote
+      const response = await fetch("/api/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        { merge: true }
-      ); // Merge to update or create a document
+        body: JSON.stringify({ vote, userId: user.id, email }),
+      });
 
-      setUserVote(vote); // Update the UI to reflect the user's vote
-      fetchVotes(); // Update vote counts after voting
+      const data = await response.json();
+
+      if (data.success) {
+        setUserVote(vote);
+        fetchVotes();
+      } else {
+        setError("Error submitting your vote.");
+      }
     } catch (err) {
       console.error("Error submitting vote:", err);
       setError("Error submitting your vote.");
     } finally {
-      setLoading(false); // Remove loading state
+      setLoading(false);
     }
   };
 
