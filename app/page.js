@@ -188,7 +188,7 @@ export default function Home() {
               onClick={() => handleVote("trump")}
             >
               {" "}
-              Donald Trump ({voteCounts.trump} votes)
+              Donald Trump <br /> ({voteCounts.trump} votes)
             </Button>
           </Box>
 
@@ -216,7 +216,7 @@ export default function Home() {
               onClick={() => handleVote("kamala")}
             >
               {" "}
-              Kamala Harris ({voteCounts.kamala} votes)
+              Kamala Harris <br /> ({voteCounts.kamala} votes)
             </Button>
           </Box>
         </Container>
